@@ -12,19 +12,35 @@ DBSession = sessionmaker(bind=engine)
 session = DBSession()
 
 @app.route('/')
+def showAllMenus():
+    restaurants = session.query(Restaurant).all()
+    output = ''
+    for r in restaurants:
+        output += r.name
+        output += '<br><br>'
+    return output
+
+# to delete
+@app.route('/catalog/<int:restaurant_id>/')
+#
+
 @app.route('/catalog/Snowboarding/items')
 @app.route('/catalog/Snowboarding/Snowboard')
 @app.route('/catalog/Snowboard/edit')
 @app.route('/catalog/Snowboard/delete')
 @app.route('/catalog.json')
 
-def HelloWorld():
-    restaurant = session.query(Restaurant).first()
-    items = session.query(MenuItem).filter_by(restaurant_id = restaurant.id)
+def restaurantMenu(restaurant_id):
+    restaurant = session.query(Restaurant).filter_by(id = restaurant_id).one()
+    items = session.query(MenuItem).filter_by(restaurant_id = restaurant_id)
     output = ''
     for i in items:
         output += i.name
         output += '<br>'
+        output += i.price
+        output += '<br>'
+        output += i.description
+        output += '<br><br>'
     return output
 
 if __name__ == '__main__':
