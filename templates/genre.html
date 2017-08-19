@@ -8,13 +8,12 @@
       {% endfor %}
     </ul>
   </div>
-  <div class="latestItems">
-    <h2>Latest Items</h2>
+  <div class="titles">
+    <h2>Genre Titles</h2>
+    <a href="{{url_for('mangaCreate', genre_id = genre_id)}}">Add new title</a>
     <ul>
-      <li>new title</li>
-      <li>new title</li>
-      <li>new title</li>
-      <li>new title</li>
+      {% for m in manga %}
+      <li><a href="{{url_for('mangaView', manga_id = m.id)}}">{{ m.name }}<a/></li>
+      {% endfor %}
     </ul>
-  </div>
 {% endblock content %}
