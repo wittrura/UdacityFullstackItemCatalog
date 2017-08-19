@@ -36,6 +36,7 @@ def mangaCreate(genre_id):
                         description = request.form['description'],
                         volumes = request.form['volumes'],
                         chapters = request.form['chapters'],
+                        authors = request.form['authors'],
                         genre_id = genre_id)
         session.add(newTitle)
         session.commit()
@@ -50,10 +51,21 @@ def mangaView(manga_id):
     return render_template('manga.html', manga = manga)
 
 
-@app.route('/catalog/titles/<int:manga_id>/edit')
-def mangaEdit(manga_id):
-    manga = session.query(Manga).filter_by(id = manga_id).one()
-    return render_template('mangaEdit.html', manga = manga);
+@app.route('/catalog/titles/<int:manga_id>/edit', methods=['GET', 'POST'])
+def mangaUpdate(manga_id):
+    editedManga = session.query(Manga).filter_by(id = manga_id).one()
+    if request.method == 'POST':
+        if request.form['name']:
+            editedManga.name = request.form['name']
+            editedManga.description = request.form['description']
+            editedManga.volumes = request.form['volumes']
+            editedManga.chapters = request.form['chapters']
+            editedManga.authors = request.form['authors']
+            session.add(editedManga)
+            session.commit()
+            return redirect(url_for('mangaView', manga_id = editedManga.id))
+    else:
+        return render_template('mangaUpdate.html', manga = editedManga);
 
 
 @app.route('/catalog/titles/<int:manga_id>/delete')

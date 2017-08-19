@@ -15,7 +15,7 @@
   <h3>Authors</h3>
   <p>{{ manga.authors }}</p>
 
-  <a href="{{url_for('mangaEdit', manga_id = manga.id)}}">Edit</a>
+  <a href="{{url_for('mangaUpdate', manga_id = manga.id)}}">Update</a>
   <a href="{{url_for('mangaDelete', manga_id = manga.id)}}">Delete</a>
 </div>
 
