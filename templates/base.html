@@ -3,16 +3,19 @@
   <head>
     <meta charset="utf-8">
     <title></title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
   </head>
   <body>
     <div class="container">
       <header>
         <h1>Manga App</h1>
-        <a href="#">Login</a>
+        <a id="login" href="#">Login</a>
       </header>
-      <div class="content">
-        {% block content %}
-        {% endblock content %}
+      <div class="container-main">
+        <main>
+          {% block content %}
+          {% endblock content %}
+        </main>
       </div>
     </div>
   </body>

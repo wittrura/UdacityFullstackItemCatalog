@@ -1,5 +1,5 @@
-from flask import Flask, render_template
-# TODO request, redirect, url_for, flash, jsonify
+from flask import Flask, render_template, url_for
+# TODO request, redirect,  flash, jsonify
 app = Flask(__name__)
 
 from sqlalchemy import create_engine
@@ -15,11 +15,6 @@ session = DBSession()
 @app.route('/')
 def showAllGenres():
     genres = session.query(Genre).all()
-    # output = ''
-    # for g in genres:
-    #     output += g.name
-    #     output += '<br><br>'
-    # return output
     return render_template('main.html', genres = genres)
 
 @app.route('/catalog/genres/<int:genre_id>/items')

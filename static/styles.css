@@ -1,0 +1,29 @@
+html, body {
+  width: 100vw;
+  min-height: 100vh;
+  margin: 0;
+  padding 0;
+}
+
+.container {
+  margin: 10px;
+}
+
+main {
+  display: grid;
+  grid-template-rows: 150px auto;
+  grid-template-columns: minmax(200px, 3fr) 9fr;
+}
+
+.categories-list {
+  grid-column: 1 / 2;
+}
+
+.latest-items {
+  grid-column: 2 / 3;
+}
+
+#login {
+  float: right;
+  display: inline;
+}
