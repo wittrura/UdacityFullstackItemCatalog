@@ -1,5 +1,5 @@
-from flask import Flask, render_template, url_for, request, redirect
-# TODO , ,  flash, jsonify
+from flask import Flask, render_template, url_for, request, redirect, jsonify
+# TODO , ,  flash,
 app = Flask(__name__)
 
 from sqlalchemy import create_engine
@@ -53,30 +53,42 @@ def mangaView(manga_id):
 
 @app.route('/catalog/titles/<int:manga_id>/edit', methods=['GET', 'POST'])
 def mangaUpdate(manga_id):
-    editedManga = session.query(Manga).filter_by(id = manga_id).one()
+    mangaToUpdate = session.query(Manga).filter_by(id = manga_id).one()
     if request.method == 'POST':
         if request.form['name']:
-            editedManga.name = request.form['name']
-            editedManga.description = request.form['description']
-            editedManga.volumes = request.form['volumes']
-            editedManga.chapters = request.form['chapters']
-            editedManga.authors = request.form['authors']
-            session.add(editedManga)
+            mangaToUpdate.name = request.form['name']
+            mangaToUpdate.description = request.form['description']
+            mangaToUpdate.volumes = request.form['volumes']
+            mangaToUpdate.chapters = request.form['chapters']
+            mangaToUpdate.authors = request.form['authors']
+            session.add(mangaToUpdate)
             session.commit()
-            return redirect(url_for('mangaView', manga_id = editedManga.id))
+            return redirect(url_for('mangaView', manga_id = mangaToUpdate.id))
     else:
-        return render_template('mangaUpdate.html', manga = editedManga);
+        return render_template('mangaUpdate.html', manga = mangaToUpdate);
 
 
-@app.route('/catalog/titles/<int:manga_id>/delete')
+@app.route('/catalog/titles/<int:manga_id>/delete', methods=['GET', 'POST'])
 def mangaDelete(manga_id):
-    manga = session.query(Manga).filter_by(id = manga_id).one()
-    return render_template('mangaDelete.html', manga = manga);
+    mangaToDelete = session.query(Manga).filter_by(id = manga_id).one()
+    genre_id = mangaToDelete.genre_id
+    if request.method == 'POST':
+        session.delete(mangaToDelete)
+        session.commit()
+        return redirect(url_for('genreListings', genre_id = genre_id))
+    else:
+        return render_template('mangaDelete.html', manga = mangaToDelete);
 
 
-@app.route('/catalog/json')
+@app.route('/catalog/genres/json')
 def catalogJSON():
-    return 'THIS IS THE ROUTE FOR RETURING DB DATA IN JSON FORMAT'
+    genres = session.query(Genre).all()
+    return jsonify(Genres = [g.serialize for g in genres])
+
+@app.route('/catalog/genres/<int:genre_id>/json')
+def genreListingsJSON(genre_id):
+    manga = session.query(Manga).filter_by(genre_id = genre_id).all()
+    return jsonify(MangaTitles = [m.serialize for m in manga])
 
 
 if __name__ == '__main__':

@@ -31,3 +31,11 @@ main {
   float: right;
   display: inline;
 }
+
+a {
+  text-decoration: none;
+}
+
+li {
+  list-style: none;
+}
