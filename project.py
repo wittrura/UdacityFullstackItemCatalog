@@ -3,25 +3,41 @@ app = Flask(__name__)
 
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
-from database_setup import Base, Restaurant, MenuItem
+from database_setup_manga import Base, Genre, Manga
 
-engine = create_engine('sqlite:///restaurantmenu.db')
+engine = create_engine('sqlite:///manga.db')
 Base.metadata.bind = engine
 
 DBSession = sessionmaker(bind=engine)
 session = DBSession()
 
 @app.route('/')
-def showAllMenus():
-    restaurants = session.query(Restaurant).all()
+def showAllGenres():
+    genres = session.query(Genre).all()
     output = ''
-    for r in restaurants:
-        output += r.name
+    for g in genres:
+        output += g.name
         output += '<br><br>'
     return output
 
 # to delete
-@app.route('/catalog/<int:restaurant_id>/')
+@app.route('/catalog/<int:genre_id>/')
+def genreListings(genre_id):
+    genre = session.query(Genre).filter_by(id = genre_id).one()
+    manga = session.query(Manga).filter_by(genre_id = genre_id)
+    output = ''
+    for m in manga:
+        output += m.name
+        output += '<br>'
+        output += str(m.volumes)
+        output += '<br>'
+        output += str(m.chapters)
+        output += '<br>'
+        output += m.authors
+        output += '<br>'
+        output += m.description
+        output += '<br><br>'
+    return output
 #
 
 @app.route('/catalog/Snowboarding/items')
