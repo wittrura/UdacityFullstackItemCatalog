@@ -3,7 +3,13 @@ app = Flask(__name__)
 
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
-from database_setup_manga import Base, Genre, Manga
+from database_setup_manga import Base, Genre, Manga, User
+
+# authorization
+from flask import session as login_session
+from key import secret_key
+import random, string
+
 
 engine = create_engine('sqlite:///manga.db')
 Base.metadata.bind = engine
@@ -27,6 +33,9 @@ def genreListings(genre_id):
     return render_template('genre.html', manga = manga, genres = genres, genre_id = genre_id)
 
 
+# TODO - route for creating a new category
+
+
 @app.route('/catalog/genres/<int:genre_id>/new', methods=['GET', 'POST'])
 def mangaCreate(genre_id):
     genre = session.query(Genre).filter_by(id = genre_id).one()
@@ -36,7 +45,8 @@ def mangaCreate(genre_id):
                         volumes = request.form['volumes'],
                         chapters = request.form['chapters'],
                         authors = request.form['authors'],
-                        genre_id = genre_id)
+                        genre_id = genre_id,
+                        user_id = login_session['user_id'])
         session.add(newTitle)
         session.commit()
         return redirect(url_for('genreListings', genre_id = genre_id))
@@ -91,6 +101,34 @@ def mangaJSON(genre_id):
     return jsonify(Manga = [m.serialize for m in manga])
 
 
+@app.route('/login')
+def showLogin():
+    state = ''.join(random.choice(string.ascii_uppercase + string.digits) for x in xrange(32))
+    login_session['state'] = state
+    return 'The current session state is %s' % login_session['state']
+
+
+def createUser(login_session):
+    newUser = User(name = login_session['username'], email = login_session['email'], picture = login_session['picture'])
+    session.add(newUser)
+    session.commit()
+    user = session.query(User).filter_by(email = login_session['email']).one()
+    return user.id
+
+
+def getUserInfo(user_id):
+    user = session.query(User).filter_by(id = user_id).one()
+    return user
+
+
+def getUserID(email):
+    try:
+        user = session.query(User).filter_by(email = email).one()
+        return user.id
+    except:
+        return None
+
 if __name__ == '__main__':
+    app.secret_key = secret_key
     app.debug = True
     app.run(host = '0.0.0.0', port = 5000)
