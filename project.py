@@ -172,18 +172,15 @@ def gconnect():
     login_session['gplus_id'] = gplus_id
 
     # get user info
-    userinfo_url = "https://www.googleapis.com/plus/v1/people/me?scope=openid%20email%20profile"
+    userinfo_url = "https://www.googleapis.com/oauth2/v1/userinfo"
     params = {'access_token': credentials.access_token, 'alt': 'json'}
-    answer = requests.get(userinfo_url, params = params)
 
+    # userinfo_url = "https://www.googleapis.com/plus/v1/people/me"
+    # params = {'access_token': credentials.access_token}
 
-    print credentials.access_token
+    answer = requests.get(userinfo_url, params=params)
 
-    
     data = json.loads(answer.text)
-
-
-    print data
 
     login_session['username'] = data['name']
     login_session['picture'] = data['picture']
