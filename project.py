@@ -114,7 +114,7 @@ def mangaJSON(genre_id):
 def showLogin():
     state = ''.join(random.choice(string.ascii_uppercase + string.digits) for x in xrange(32))
     login_session['state'] = state
-    return render_template('login.html')
+    return render_template('login.html', STATE=state)
 
 @app.route('/gconnect', methods=['POST'])
 def gconnect():
@@ -158,6 +158,7 @@ def gconnect():
         response.headers['Content-Type'] = 'application/json'
         return response
 
+
     # check to see if a user is already logged in
     stored_credentials = login_session.get('credentials')
     stored_gplus_id = login_session.get('gplus_id')
@@ -167,13 +168,14 @@ def gconnect():
         return response
 
     # store the access token in the session for later user
-    login_session['credentials'] = credentials
+    login_session['credentials'] = credentials.access_token
     login_session['gplus_id'] = gplus_id
 
     # get user info
     userinfo_url = "https://www.googleapis.com/oauth2/v1/userinfo"
     params = {'access_token': credentials.access_token, 'alt': 'json'}
     answer = requests.get(userinfo_url, params = params)
+
     data = json.loads(answer.text)
 
     login_session['username'] = data['name']
