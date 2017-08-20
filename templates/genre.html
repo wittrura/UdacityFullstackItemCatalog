@@ -13,7 +13,8 @@
     <a href="{{url_for('mangaCreate', genre_id = genre_id)}}">Add new title</a>
     <ul>
       {% for m in manga %}
-      <li><a href="{{url_for('mangaView', manga_id = m.id)}}">{{ m.name }}<a/></li>
+      <li><a href="{{url_for('mangaView', manga_id = m.id)}}">{{ m.name }}</a></li>
       {% endfor %}
     </ul>
+  </div>
 {% endblock content %}

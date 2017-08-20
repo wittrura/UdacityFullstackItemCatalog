@@ -7,12 +7,23 @@ from sqlalchemy import create_engine
 
 Base = declarative_base()
 
+class User(Base):
+    __tablename__ = 'user'
+
+    name = Column(String(50), nullable = False)
+    email = Column(String(50), nullable = False)
+    picture = Column(String(80))
+    id = Column(Integer, primary_key = True)
+
 
 class Genre(Base):
     __tablename__ = 'genre'
 
     name = Column(String(80), nullable = False)
     id = Column(Integer, primary_key = True)
+
+    user_id = Column(Integer, ForeignKey('user.id'))
+    user = relationship(User)
 
     @property
     def serialize(self):
@@ -34,9 +45,11 @@ class Manga(Base):
     genre_id = Column(Integer, ForeignKey('genre.id'))
     genre = relationship(Genre)
 
+    user_id = Column(Integer, ForeignKey('user.id'))
+    user = relationship(User)
+
     @property
     def serialize(self):
-        #returns object data in serializeable format
         return {
         'name': self.name,
         'id': self.id,
@@ -45,6 +58,8 @@ class Manga(Base):
         'description': self.description,
         'authors': self.authors
         }
+
+
 
 
 engine = create_engine('sqlite:///manga.db')

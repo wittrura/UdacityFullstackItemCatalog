@@ -1,5 +1,4 @@
 from flask import Flask, render_template, url_for, request, redirect, jsonify
-# TODO , ,  flash,
 app = Flask(__name__)
 
 from sqlalchemy import create_engine
@@ -64,6 +63,7 @@ def mangaUpdate(manga_id):
             session.add(mangaToUpdate)
             session.commit()
             return redirect(url_for('mangaView', manga_id = mangaToUpdate.id))
+        return render_template('mangaUpdate.html', manga = mangaToUpdate)
     else:
         return render_template('mangaUpdate.html', manga = mangaToUpdate);
 
@@ -81,14 +81,14 @@ def mangaDelete(manga_id):
 
 
 @app.route('/catalog/genres/json')
-def catalogJSON():
+def genresJSON():
     genres = session.query(Genre).all()
     return jsonify(Genres = [g.serialize for g in genres])
 
 @app.route('/catalog/genres/<int:genre_id>/json')
-def genreListingsJSON(genre_id):
+def mangaJSON(genre_id):
     manga = session.query(Manga).filter_by(genre_id = genre_id).all()
-    return jsonify(MangaTitles = [m.serialize for m in manga])
+    return jsonify(Manga = [m.serialize for m in manga])
 
 
 if __name__ == '__main__':

@@ -1,22 +1,21 @@
 {% extends "base.html" %}
 {% block content %}
-<div class="content-manga">
-  <h2>{{ manga.name }} - <a href="{{url_for('genreListings', genre_id = manga.genre_id)}}">{{ manga.genre.name}}</a></h2>
+  <div class="content-manga">
+    <h2>{{ manga.name }} - <a href="{{url_for('genreListings', genre_id = manga.genre_id)}}">{{ manga.genre.name}}</a></h2>
 
-  <h3>Description</h3>
-  <p>{{ manga.description }}</p>
+    <h3>Description</h3>
+    <p>{{ manga.description }}</p>
 
-  <h3>Number of Volumes</h3>
-  <p>{{ manga.volumes }}</p>
+    <h3>Number of Volumes</h3>
+    <p>{{ manga.volumes }}</p>
 
-  <h3>Number of Chapters</h3>
-  <p>{{ manga.chapters }}</p>
+    <h3>Number of Chapters</h3>
+    <p>{{ manga.chapters }}</p>
 
-  <h3>Authors</h3>
-  <p>{{ manga.authors }}</p>
+    <h3>Authors</h3>
+    <p>{{ manga.authors }}</p>
 
-  <a href="{{url_for('mangaUpdate', manga_id = manga.id)}}">Update</a> |
-  <a href="{{url_for('mangaDelete', manga_id = manga.id)}}">Delete</a>
-</div>
-
+    <a href="{{url_for('mangaUpdate', manga_id = manga.id)}}">Update</a> |
+    <a href="{{url_for('mangaDelete', manga_id = manga.id)}}">Delete</a>
+  </div>
 {% endblock content %}
