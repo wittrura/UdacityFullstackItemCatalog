@@ -1,21 +1,24 @@
 {% extends "base.html" %}
 {% block content %}
 {% include "header.html" %}
-  <div class="col-md-3">
-    <h2>Genres</h2>
-    <ul>
-      {% for g in genres %}
-      <li><a href="{{url_for('genreListings', genre_id = g.id)}}">{{g.name}}</a></li>
-      {% endfor %}
-    </ul>
+  <div class="row">
+    <div class="col-md-3">
+      <h2>Genres</h2>
+      <ul>
+        {% for g in genres %}
+        <li><a href="{{url_for('genreListings', genre_id = g.id)}}">{{g.name}}</a></li>
+        {% endfor %}
+      </ul>
+    </div>
+    <div class="col-md-9">
+      <h2>Genre Titles</h2>
+      <a href="{{url_for('mangaCreate', genre_id = genre_id)}}">Add new title</a>
+      <ul>
+        {% for m in manga %}
+        <li><a href="{{url_for('mangaView', manga_id = m.id)}}">{{ m.name }}</a></li>
+        {% endfor %}
+      </ul>
+    </div>
   </div>
-  <div class="col-md-9">
-    <h2>Genre Titles</h2>
-    <a href="{{url_for('mangaCreate', genre_id = genre_id)}}">Add new title</a>
-    <ul>
-      {% for m in manga %}
-      <li><a href="{{url_for('mangaView', manga_id = m.id)}}">{{ m.name }}</a></li>
-      {% endfor %}
-    </ul>
-  </div>
+
 {% endblock content %}

@@ -1,21 +1,24 @@
 {% extends "base.html" %}
 {% block content %}
 {% include "header.html" %}
-  <div class="col-md-3">
-    <h2>Genres</h2>
-    <ul>
-      {% for g in genres %}
-      <li><a href="{{url_for('genreListings', genre_id = g.id)}}">{{g.name}}</a></li>
-      {% endfor %}
-    </ul>
+  <div class="row">
+    <div class="col-md-3">
+      <h2>Genres</h2>
+      <ul>
+        {% for g in genres %}
+        <li><a href="{{url_for('genreListings', genre_id = g.id)}}">{{g.name}}</a></li>
+        {% endfor %}
+      </ul>
+    </div>
+    <div class="col-md-9">
+      <h2>Latest Titles</h2>
+      <ul>
+        <li>new title</li>
+        <li>new title</li>
+        <li>new title</li>
+        <li>new title</li>
+      </ul>
+    </div>
   </div>
-  <div class="col-md-9">
-    <h2>Latest Titles</h2>
-    <ul>
-      <li>new title</li>
-      <li>new title</li>
-      <li>new title</li>
-      <li>new title</li>
-    </ul>
-  </div>
+
 {% endblock content %}

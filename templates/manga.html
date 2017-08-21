@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 {% block content %}
 {% include "header.html" %}
-  <div class="content-manga">
+  <div class="row">
     <h2>{{ manga.name }} - <a href="{{url_for('genreListings', genre_id = manga.genre_id)}}">{{ manga.genre.name}}</a></h2>
 
     <h3>Description:</h3>

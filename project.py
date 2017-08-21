@@ -105,7 +105,7 @@ def mangaDelete(manga_id):
     mangaToDelete = session.query(Manga).filter_by(id = manga_id).one()
     genre_id = mangaToDelete.genre_id
 
-    if mangaToDelete.user_id != login[session]:
+    if mangaToDelete.user_id != login_session['user_id']:
         return "<script>function alertUser() {alert('You are not authorized to delete this manga title. Please add your own title in order to delete.');}</script><body onload='alertUser()'>"
 
     if request.method == 'POST':
