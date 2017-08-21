@@ -1,6 +1,7 @@
 {% extends "base.html" %}
 {% block content %}
-  <div class="categoriesList">
+{% include "header.html" %}
+  <div id="categoriesList" class="col-md-3">
     <h2>Genres</h2>
     <ul>
       {% for g in genres %}
@@ -8,7 +9,7 @@
       {% endfor %}
     </ul>
   </div>
-  <div class="titles">
+  <div id="genreTitles" class="col-md-9">
     <h2>Genre Titles</h2>
     <a href="{{url_for('mangaCreate', genre_id = genre_id)}}">Add new title</a>
     <ul>

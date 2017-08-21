@@ -47,6 +47,9 @@ def genreListings(genre_id):
 
 @app.route('/catalog/genres/<int:genre_id>/new', methods=['GET', 'POST'])
 def mangaCreate(genre_id):
+    if 'username' not in login_session:
+        return redirect('/login')
+
     genre = session.query(Genre).filter_by(id = genre_id).one()
     if request.method == 'POST':
         newTitle = Manga(name = request.form['name'],
@@ -71,6 +74,9 @@ def mangaView(manga_id):
 
 @app.route('/catalog/titles/<int:manga_id>/edit', methods=['GET', 'POST'])
 def mangaUpdate(manga_id):
+    if 'username' not in login_session:
+        return redirect('/login')
+
     mangaToUpdate = session.query(Manga).filter_by(id = manga_id).one()
     if request.method == 'POST':
         if request.form['name']:
@@ -89,6 +95,9 @@ def mangaUpdate(manga_id):
 
 @app.route('/catalog/titles/<int:manga_id>/delete', methods=['GET', 'POST'])
 def mangaDelete(manga_id):
+    if 'username' not in login_session:
+        return redirect('/login')
+
     mangaToDelete = session.query(Manga).filter_by(id = manga_id).one()
     genre_id = mangaToDelete.genre_id
     if request.method == 'POST':
@@ -185,6 +194,12 @@ def gconnect():
     login_session['username'] = data['name']
     login_session['picture'] = data['picture']
     login_session['email'] = data['email']
+
+    # check if user exists in db, creates an entry if the user does not exists
+    user_id = getUserID(login_session['email'])
+    if not user_id:
+        user_id = createUser(login_session)
+    login_session['user_id'] = user_id
 
     output = ''
     output += '<h1>Welcome, '

@@ -1,6 +1,7 @@
 {% extends "base.html" %}
 {% block content %}
-  <div class="categoriesList">
+{% include "header.html" %}
+  <div id="categoriesList" class="col-md-3">
     <h2>Genres</h2>
     <ul>
       {% for g in genres %}
@@ -8,7 +9,7 @@
       {% endfor %}
     </ul>
   </div>
-  <div class="latestItems">
+  <div id="latestItems" class="col-md-9">
     <h2>Latest Titles</h2>
     <ul>
       <li>new title</li>
