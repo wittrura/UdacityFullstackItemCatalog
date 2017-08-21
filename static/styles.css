@@ -56,19 +56,19 @@ h3 {
 .btn {
 	padding: 20px;
 	margin: 0;
-	border-color: #9FB80A;
+	border-color: #42C3C9;
 	border-width: 2px;
-	color: #9FB80A;;
+	color: #42C3C9;;
 }
 .btn:hover {
-	border-color: #9FB80A;
+	border-color: #42C3C9;
 }
 .btn.delete {
-	border-color: #aaaaaa;
-	color: #aaaaaa;
+	border-color: #f76f0e;
+	color: #f76f0e;
 }
 .btn.delete:hover {
-	border-color: #aaaaaa;
+	border-color: #f76f0e;
 	color: red;
 }
 .glyphicon {
@@ -96,7 +96,7 @@ h3 {
 	background-color: #42C3C9;
 }
 .divider.green {
-	background-color: #9FB80A;
+	background-color: #42C3C9;
 }
 .banner.main {
 	height: 150px;

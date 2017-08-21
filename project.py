@@ -69,7 +69,11 @@ def mangaCreate(genre_id):
 @app.route('/catalog/titles/<int:manga_id>')
 def mangaView(manga_id):
     manga = session.query(Manga).filter_by(id = manga_id).one()
-    return render_template('manga.html', manga = manga)
+    creator = getUserInfo(manga.user_id)
+    if 'username' not in login_session or creator.id != login_session['user_id']:
+        return render_template('mangaPublic.html', manga = manga)
+    else:
+        return render_template('manga.html', manga = manga)
 
 
 @app.route('/catalog/titles/<int:manga_id>/edit', methods=['GET', 'POST'])
@@ -100,6 +104,10 @@ def mangaDelete(manga_id):
 
     mangaToDelete = session.query(Manga).filter_by(id = manga_id).one()
     genre_id = mangaToDelete.genre_id
+
+    if mangaToDelete.user_id != login[session]:
+        return "<script>function alertUser() {alert('You are not authorized to delete this manga title. Please add your own title in order to delete.');}</script><body onload='alertUser()'>"
+
     if request.method == 'POST':
         session.delete(mangaToDelete)
         session.commit()
