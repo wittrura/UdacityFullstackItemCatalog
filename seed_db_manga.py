@@ -1,7 +1,7 @@
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 
-from database_setup_manga import Base, Genre, Manga
+from database_setup_manga import Base, Genre, Manga, User
 
 engine = create_engine('sqlite:///manga.db')
 # Bind the engine to the metadata of the Base class so that the
@@ -19,28 +19,34 @@ DBSession = sessionmaker(bind=engine)
 session = DBSession()
 
 
-# Menu for UrbanBurger
-genre1 = Genre(name="Action")
+
+User1 = User(name="Robo Barista", email="tinnyTim@udacity.com",
+             picture='https://pbs.twimg.com/profile_images/2671170543/18debd694829ed78203a5a36dd364160_400x400.png')
+session.add(User1)
+session.commit()
+
+
+genre1 = Genre(name="Action", user_id = 1)
 session.add(genre1)
 session.commit()
 
 
-genre2 = Genre(name="Psychological")
+genre2 = Genre(name="Psychological", user_id = 1)
 session.add(genre2)
 session.commit()
 
 
-genre3 = Genre(name="Shounen")
+genre3 = Genre(name="Shounen", user_id = 1)
 session.add(genre3)
 session.commit()
 
 
-genre4 = Genre(name="Harem")
+genre4 = Genre(name="Harem", user_id = 1)
 session.add(genre4)
 session.commit()
 
 
-genre5 = Genre(name="Seinen")
+genre5 = Genre(name="Seinen", user_id = 1)
 session.add(genre5)
 session.commit()
 
@@ -51,6 +57,7 @@ mangaItem1 = Manga(name="Naruto",
                 chapters = 700,
                 description="Before Naruto's birth, a great demon fox had attacked the Hidden Leaf Village. A man known as the 4th Hokage sealed the demon inside the newly born Naruto, causing him to unknowingly grow up detested by his fellow villagers. Despite his lack of talent in many areas of ninjutsu, Naruto strives for only one goal: to gain the title of Hokage, the strongest ninja in his village. Desiring the respect he never received, Naruto works toward his dream with fellow friends Sasuke and Sakura and mentor Kakashi as they go through many trials and battles that come with being a ninja",
                 authors = "Kishimoto, Masashi",
+                user_id = 1,
                 genre=genre1)
 
 session.add(mangaItem1)
@@ -62,6 +69,7 @@ mangaItem2 = Manga(name="Bleach",
                 chapters = 705,
                 description="Ichigo Kurosaki has always been able to see ghosts, but this ability doesn't change his life nearly as much as his close encounter with Rukia Kuchiki, a Soul Reaper and member of the mysterious Soul Society. While fighting a Hollow, an evil spirit that preys on humans who display psychic energy, Rukia attempts to lend Ichigo some of her powers so that he can save his family; but much to her surprise, Ichigo absorbs every last drop of her energy. Now a full-fledged Soul Reaper himself, Ichigo quickly learns that the world he inhabits is one full of dangerous spirits and, along with Rukia - who is slowly regaining her powers - it's Ichigo's job to protect the innocent from Hollows and help the spirits themselves find peace.",
                 authors = "Kubo, Tite",
+                user_id = 1,
                 genre=genre1)
 
 session.add(mangaItem2)
@@ -73,362 +81,82 @@ mangaItem3 = Manga(name="Fairy Tail",
                 chapters = 549,
                 description="In the mystical realm of Earth Land, magic exists at the core of everyday life for its inhabitants, from transportation to utilities and everything in between. However, even with all its benefits, magic can also be used for great evil; therefore, to prevent dark forces from upsetting the natural order of things, there exists a system of magical guilds in the Kingdom of Fiore. Under the command of their respective guild masters, these guilds are made up of witches and wizards who take on various job requests to earn fame and fortune. One particular guild stands high above the rest in both strength and spirit, and its name is Fairy Tail.",
                 authors = "Mashima, Hiro",
+                user_id = 1,
                 genre=genre1)
 
 session.add(mangaItem3)
 session.commit()
 
-# Create dummy user
-# User1 = User(name="Robo Barista", email="tinnyTim@udacity.com",
-#              picture='https://pbs.twimg.com/profile_images/2671170543/18debd694829ed78203a5a36dd364160_400x400.png')
-# session.add(User1)
-# session.commit()
 
-#
-#
-# menuItem1 = Manga(name="French Fries", description="with garlic and parmesan",
-#                      price="$2.99", course="Appetizer", restaurant=genre1)
-#
-# session.add(menuItem1)
-# session.commit()
-#
-# menuItem2 = Manga(name="Chicken Burger", description="Juicy grilled chicken patty with tomato mayo and lettuce",
-#                      price="$5.50", course="Entree", restaurant=genre1)
-#
-# session.add(menuItem2)
-# session.commit()
-#
-# menuItem3 = Manga(name="Chocolate Cake", description="fresh baked and served with ice cream",
-#                      price="$3.99", course="Dessert", restaurant=genre1)
-#
-# session.add(menuItem3)
-# session.commit()
-#
-# menuItem4 = Manga(name="Sirloin Burger", description="Made with grade A beef",
-#                      price="$7.99", course="Entree", restaurant=genre1)
-#
-# session.add(menuItem4)
-# session.commit()
-#
-# menuItem5 = Manga(name="Root Beer", description="16oz of refreshing goodness",
-#                      price="$1.99", course="Beverage", restaurant=genre1)
-#
-# session.add(menuItem5)
-# session.commit()
-#
-# menuItem6 = Manga(name="Iced Tea", description="with Lemon",
-#                      price="$.99", course="Beverage", restaurant=genre1)
-#
-# session.add(menuItem6)
-# session.commit()
-#
-# menuItem7 = Manga(name="Grilled Cheese Sandwich", description="On texas toast with American Cheese",
-#                      price="$3.49", course="Entree", restaurant=genre1)
-#
-# session.add(menuItem7)
-# session.commit()
-#
-# menuItem8 = Manga(name="Veggie Burger", description="Made with freshest of ingredients and home grown spices",
-#                      price="$5.99", course="Entree", restaurant=genre1)
-#
-# session.add(menuItem8)
-# session.commit()
-#
-#
-# # Menu for Super Stir Fry
-# restaurant2 = Genre(name="Super Stir Fry")
-#
-# session.add(restaurant2)
-# session.commit()
-#
-#
-# menuItem1 = Manga(name="Chicken Stir Fry", description="With your choice of noodles vegetables and sauces",
-#                      price="$7.99", course="Entree", restaurant=restaurant2)
-#
-# session.add(menuItem1)
-# session.commit()
-#
-# menuItem2 = Manga(
-#     name="Peking Duck", description=" A famous duck dish from Beijing[1] that has been prepared since the imperial era. The meat is prized for its thin, crisp skin, with authentic versions of the dish serving mostly the skin and little meat, sliced in front of the diners by the cook", price="$25", course="Entree", restaurant=restaurant2)
-#
-# session.add(menuItem2)
-# session.commit()
-#
-# menuItem3 = Manga(name="Spicy Tuna Roll", description="Seared rare ahi, avocado, edamame, cucumber with wasabi soy sauce ",
-#                      price="15", course="Entree", restaurant=restaurant2)
-#
-# session.add(menuItem3)
-# session.commit()
-#
-# menuItem4 = Manga(name="Nepali Momo ", description="Steamed dumplings made with vegetables, spices and meat. ",
-#                      price="12", course="Entree", restaurant=restaurant2)
-#
-# session.add(menuItem4)
-# session.commit()
-#
-# menuItem5 = Manga(name="Beef Noodle Soup", description="A Chinese noodle soup made of stewed or red braised beef, beef broth, vegetables and Chinese noodles.",
-#                      price="14", course="Entree", restaurant=restaurant2)
-#
-# session.add(menuItem5)
-# session.commit()
-#
-# menuItem6 = Manga(name="Ramen", description="a Japanese noodle soup dish. It consists of Chinese-style wheat noodles served in a meat- or (occasionally) fish-based broth, often flavored with soy sauce or miso, and uses toppings such as sliced pork, dried seaweed, kamaboko, and green onions.",
-#                      price="12", course="Entree", restaurant=restaurant2)
-#
-# session.add(menuItem6)
-# session.commit()
-#
-#
-# # Menu for Panda Garden
-# genre1 = Genre(name="Panda Garden")
-#
-# session.add(genre1)
-# session.commit()
-#
-#
-# menuItem1 = Manga(name="Pho", description="a Vietnamese noodle soup consisting of broth, linguine-shaped rice noodles called banh pho, a few herbs, and meat.",
-#                      price="$8.99", course="Entree", restaurant=genre1)
-#
-# session.add(menuItem1)
-# session.commit()
-#
-# menuItem2 = Manga(name="Chinese Dumplings", description="a common Chinese dumpling which generally consists of minced meat and finely chopped vegetables wrapped into a piece of dough skin. The skin can be either thin and elastic or thicker.",
-#                      price="$6.99", course="Appetizer", restaurant=genre1)
-#
-# session.add(menuItem2)
-# session.commit()
-#
-# menuItem3 = Manga(name="Gyoza", description="The most prominent differences between Japanese-style gyoza and Chinese-style jiaozi are the rich garlic flavor, which is less noticeable in the Chinese version, the light seasoning of Japanese gyoza with salt and soy sauce, and the fact that gyoza wrappers are much thinner",
-#                      price="$9.95", course="Entree", restaurant=genre1)
-#
-# session.add(menuItem3)
-# session.commit()
-#
-# menuItem4 = Manga(name="Stinky Tofu", description="Taiwanese dish, deep fried fermented tofu served with pickled cabbage.",
-#                      price="$6.99", course="Entree", restaurant=genre1)
-#
-# session.add(menuItem4)
-# session.commit()
-#
-# menuItem2 = Manga(name="Veggie Burger", description="Juicy grilled veggie patty with tomato mayo and lettuce",
-#                      price="$9.50", course="Entree", restaurant=genre1)
-#
-# session.add(menuItem2)
-# session.commit()
-#
-#
-# # Menu for Thyme for that
-# genre1 = Genre(name="Thyme for That Vegetarian Cuisine ")
-#
-# session.add(genre1)
-# session.commit()
-#
-#
-# menuItem1 = Manga(name="Tres Leches Cake", description="Rich, luscious sponge cake soaked in sweet milk and topped with vanilla bean whipped cream and strawberries.",
-#                      price="$2.99", course="Dessert", restaurant=genre1)
-#
-# session.add(menuItem1)
-# session.commit()
-#
-# menuItem2 = Manga(name="Mushroom risotto", description="Portabello mushrooms in a creamy risotto",
-#                      price="$5.99", course="Entree", restaurant=genre1)
-#
-# session.add(menuItem2)
-# session.commit()
-#
-# menuItem3 = Manga(name="Honey Boba Shaved Snow", description="Milk snow layered with honey boba, jasmine tea jelly, grass jelly, caramel, cream, and freshly made mochi",
-#                      price="$4.50", course="Dessert", restaurant=genre1)
-#
-# session.add(menuItem3)
-# session.commit()
-#
-# menuItem4 = Manga(name="Cauliflower Manchurian", description="Golden fried cauliflower florets in a midly spiced soya,garlic sauce cooked with fresh cilantro, celery, chilies,ginger & green onions",
-#                      price="$6.95", course="Appetizer", restaurant=genre1)
-#
-# session.add(menuItem4)
-# session.commit()
-#
-# menuItem5 = Manga(name="Aloo Gobi Burrito", description="Vegan goodness. Burrito filled with rice, garbanzo beans, curry sauce, potatoes (aloo), fried cauliflower (gobi) and chutney. Nom Nom",
-#                      price="$7.95", course="Entree", restaurant=genre1)
-#
-# session.add(menuItem5)
-# session.commit()
-#
-# menuItem2 = Manga(name="Veggie Burger", description="Juicy grilled veggie patty with tomato mayo and lettuce",
-#                      price="$6.80", course="Entree", restaurant=genre1)
-#
-# session.add(menuItem2)
-# session.commit()
-#
-#
-# # Menu for Tony's Bistro
-# genre1 = Genre(name="Tony\'s Bistro ")
-#
-# session.add(genre1)
-# session.commit()
-#
-#
-# menuItem1 = Manga(name="Shellfish Tower", description="Lobster, shrimp, sea snails, crawfish, stacked into a delicious tower",
-#                      price="$13.95", course="Entree", restaurant=genre1)
-#
-# session.add(menuItem1)
-# session.commit()
-#
-# menuItem2 = Manga(name="Chicken and Rice", description="Chicken... and rice",
-#                      price="$4.95", course="Entree", restaurant=genre1)
-#
-# session.add(menuItem2)
-# session.commit()
-#
-# menuItem3 = Manga(name="Mom's Spaghetti", description="Spaghetti with some incredible tomato sauce made by mom",
-#                      price="$6.95", course="Entree", restaurant=genre1)
-#
-# session.add(menuItem3)
-# session.commit()
-#
-# menuItem4 = Manga(name="Choc Full O\' Mint (Smitten\'s Fresh Mint Chip ice cream)",
-#                      description="Milk, cream, salt, ..., Liquid nitrogen magic", price="$3.95", course="Dessert", restaurant=genre1)
-#
-# session.add(menuItem4)
-# session.commit()
-#
-# menuItem5 = Manga(name="Tonkatsu Ramen", description="Noodles in a delicious pork-based broth with a soft-boiled egg",
-#                      price="$7.95", course="Entree", restaurant=genre1)
-#
-# session.add(menuItem5)
-# session.commit()
-#
-#
-# # Menu for Andala's
-# genre1 = Genre(name="Andala\'s")
-#
-# session.add(genre1)
-# session.commit()
-#
-#
-# menuItem1 = Manga(name="Lamb Curry", description="Slow cook that thang in a pool of tomatoes, onions and alllll those tasty Indian spices. Mmmm.",
-#                      price="$9.95", course="Entree", restaurant=genre1)
-#
-# session.add(menuItem1)
-# session.commit()
-#
-# menuItem2 = Manga(name="Chicken Marsala", description="Chicken cooked in Marsala wine sauce with mushrooms",
-#                      price="$7.95", course="Entree", restaurant=genre1)
-#
-# session.add(menuItem2)
-# session.commit()
-#
-# menuItem3 = Manga(name="Potstickers", description="Delicious chicken and veggies encapsulated in fried dough.",
-#                      price="$6.50", course="Appetizer", restaurant=genre1)
-#
-# session.add(menuItem3)
-# session.commit()
-#
-# menuItem4 = Manga(name="Nigiri Sampler", description="Maguro, Sake, Hamachi, Unagi, Uni, TORO!",
-#                      price="$6.75", course="Appetizer", restaurant=genre1)
-#
-# session.add(menuItem4)
-# session.commit()
-#
-# menuItem2 = Manga(name="Veggie Burger", description="Juicy grilled veggie patty with tomato mayo and lettuce",
-#                      price="$7.00", course="Entree", restaurant=genre1)
-#
-# session.add(menuItem2)
-# session.commit()
-#
-#
-# # Menu for Auntie Ann's
-# genre1 = Genre(name="Auntie Ann\'s Diner ")
-#
-# session.add(genre1)
-# session.commit()
-#
-# menuItem9 = Manga(name="Chicken Fried Steak", description="Fresh battered sirloin steak fried and smothered with cream gravy",
-#                      price="$8.99", course="Entree", restaurant=genre1)
-#
-# session.add(menuItem9)
-# session.commit()
-#
-#
-# menuItem1 = Manga(name="Boysenberry Sorbet", description="An unsettlingly huge amount of ripe berries turned into frozen (and seedless) awesomeness",
-#                      price="$2.99", course="Dessert", restaurant=genre1)
-#
-# session.add(menuItem1)
-# session.commit()
-#
-# menuItem2 = Manga(name="Broiled salmon", description="Salmon fillet marinated with fresh herbs and broiled hot & fast",
-#                      price="$10.95", course="Entree", restaurant=genre1)
-#
-# session.add(menuItem2)
-# session.commit()
-#
-# menuItem3 = Manga(name="Morels on toast (seasonal)", description="Wild morel mushrooms fried in butter, served on herbed toast slices",
-#                      price="$7.50", course="Appetizer", restaurant=genre1)
-#
-# session.add(menuItem3)
-# session.commit()
-#
-# menuItem4 = Manga(name="Tandoori Chicken", description="Chicken marinated in yoghurt and seasoned with a spicy mix(chilli, tamarind among others) and slow cooked in a cylindrical clay or metal oven which gets its heat from burning charcoal.",
-#                      price="$8.95", course="Entree", restaurant=genre1)
-#
-# session.add(menuItem4)
-# session.commit()
-#
-# menuItem2 = Manga(name="Veggie Burger", description="Juicy grilled veggie patty with tomato mayo and lettuce",
-#                      price="$9.50", course="Entree", restaurant=genre1)
-#
-# session.add(menuItem2)
-# session.commit()
-#
-# menuItem10 = Manga(name="Spinach Ice Cream", description="vanilla ice cream made with organic spinach leaves",
-#                       price="$1.99", course="Dessert", restaurant=genre1)
-#
-# session.add(menuItem10)
-# session.commit()
-#
-#
-# # Menu for Cocina Y Amor
-# genre1 = Genre(name="Cocina Y Amor ")
-#
-# session.add(genre1)
-# session.commit()
-#
-#
-# menuItem1 = Manga(name="Super Burrito Al Pastor", description="Marinated Pork, Rice, Beans, Avocado, Cilantro, Salsa, Tortilla",
-#                      price="$5.95", course="Entree", restaurant=genre1)
-#
-# session.add(menuItem1)
-# session.commit()
-#
-# menuItem2 = Manga(name="Cachapa", description="Golden brown, corn-based Venezuelan pancake; usually stuffed with queso telita or queso de mano, and possibly lechon. ",
-#                      price="$7.99", course="Entree", restaurant=genre1)
-#
-# session.add(menuItem2)
-# session.commit()
-#
-#
-# genre1 = Genre(name="State Bird Provisions")
-# session.add(genre1)
-# session.commit()
-#
-# menuItem1 = Manga(name="Chantrelle Toast", description="Crispy Toast with Sesame Seeds slathered with buttery chantrelle mushrooms",
-#                      price="$5.95", course="Appetizer", restaurant=genre1)
-#
-# session.add(menuItem1)
-# session.commit()
-#
-# menuItem1 = Manga(name="Guanciale Chawanmushi", description="Japanese egg custard served hot with spicey Italian Pork Jowl (guanciale)",
-#                      price="$6.95", course="Dessert", restaurant=genre1)
-#
-# session.add(menuItem1)
-# session.commit()
-#
-#
-# menuItem1 = Manga(name="Lemon Curd Ice Cream Sandwich", description="Lemon Curd Ice Cream Sandwich on a chocolate macaron with cardamom meringue and cashews",
-#                      price="$4.25", course="Dessert", restaurant=genre1)
-#
-# session.add(menuItem1)
-# session.commit()
+mangaItem4 = Manga(name="Tokyo Ghoul",
+                volumes = 14,
+                chapters = 144,
+                description='Lurking within the shadows of Tokyo are frightening beings known as "ghouls," who satisfy their hunger by feeding on humans once night falls. An organization known as the Commission of Counter Ghoul (CCG) has been established in response to the constant attacks on citizens and as a means of purging these creatures. However, the problem lies in identifying ghouls as they disguise themselves as humans, living amongst the masses so that hunting prey will be easier. Ken Kaneki, an unsuspecting university freshman, finds himself caught in a world between humans and ghouls when his date turns out to be a ghoul after his flesh.',
+                authors = "Mashima, Hiro",
+                user_id = 1,
+                genre=genre5)
 
+session.add(mangaItem4)
+session.commit()
+
+
+mangaItem5 = Manga(name="Berserk",
+                volumes = 50,
+                chapters = 430,
+                description='Guts, a former mercenary now known as the "Black Swordsman," is out for revenge. After a tumultuous childhood, he finally finds someone he respects and believes he can trust, only to have everything fall apart when this person takes away everything important to Guts for the purpose of fulfilling his own desires. Now marked for death, Guts becomes condemned to a fate in which he is relentlessly pursued by demonic beings.',
+                authors = "Miura, Kentarou",
+                user_id = 1,
+                genre=genre5)
+
+session.add(mangaItem5)
+session.commit()
+
+
+mangaItem6 = Manga(name="Shingeki no Kyojin",
+                volumes = 15,
+                chapters = 95,
+                description="Hundreds of years ago, horrifying creatures which resembled humans appeared. These mindless, towering giants, called 'titans,' proved to be an existential threat, as they preyed on whatever humans they could find in order to satisfy a seemingly unending appetite. Unable to effectively combat the titans, mankind was forced to barricade themselves within large walls surrounding what may very well be humanity's last safe haven in the world.",
+                authors = "Isayama, Hajime",
+                user_id = 1,
+                genre=genre3)
+
+session.add(mangaItem6)
+session.commit()
+
+
+mangaItem7 = Manga(name="Death Note",
+                volumes = 12,
+                chapters = 108,
+                description="A shinigami, as a god of death, can kill any person - provided they see their victim's face and write their victim's name in a notebook called a Death Note. One day, Ryuk, bored by the shinigami lifestyle and interested in seeing how a human would use a Death Note, drops one into the human realm.",
+                authors = "Obata, Takeshi (Art), Ohba, Tsugumi (Story)",
+                user_id = 1,
+                genre=genre3)
+
+session.add(mangaItem7)
+session.commit()
+
+
+mangaItem8 = Manga(name="Rosario to Vampire",
+                volumes = 10,
+                chapters = 40,
+                description="Aono Tsukune is so hard up on luck, that he can't even get admitted into high school. His parents finally find him a school with no tests required for admittance, out in the middle of nowhere. He finds out the school is a youkai (monster) academy, Just as he is about to resign himself and get back on the bus home, he bumps into a beautiful girl. Turns out this beautiful girl, Akashiya Moka, is also a vampire who bites him right off the bat. They become friends and Tsukune is ready for a happy school life with her, until he finds out that if a human is found on the school grounds, he or she should be killed.",
+                authors = "Ikeda, Akihisa",
+                user_id = 1,
+                genre=genre4)
+
+session.add(mangaItem8)
+session.commit()
+
+
+mangaItem9 = Manga(name="Elfen Lied",
+                volumes = 12,
+                chapters = 113,
+                description="Lucy is a special breed of human referred to as 'Diclonius,' born with a short pair of horns and invisible telekinetic hands that lands her as a victim of inhumane scientific experimentation by the government. However, once circumstances present her an opportunity to escape, Lucy, corrupted by the confinement and torture, unleashes a torrent of bloodshed as she escapes her captors.",
+                authors = "Okamoto, Lynn",
+                user_id = 1,
+                genre=genre2)
+
+session.add(mangaItem9)
+session.commit()
 
 print "added genre and manga items!"
