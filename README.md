@@ -4,7 +4,7 @@ Set up the database by running `python database_setup_manga.py`
 # Seeding the database
 A seed file is provide to populate the initial database and get the app up and running
 
-Data can be loading by running `python seed_db_manga.py `
+Data can be loaded by running `python seed_db_manga.py `
 
 # Start the web server
 Run `python project.py`
