@@ -29,7 +29,8 @@ session = DBSession()
 @app.route('/')
 def showAllGenres():
     genres = session.query(Genre).all()
-    return render_template('main.html', genres = genres)
+    latest_titles = session.query(Manga).order_by(Manga.id.desc()).limit(3)
+    return render_template('main.html', genres = genres, latest_titles = latest_titles)
 
 
 @app.route('/catalog/genres/<int:genre_id>/items')
