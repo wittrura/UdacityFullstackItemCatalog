@@ -32,7 +32,9 @@ session = DBSession()
 def showAllGenres():
     genres = session.query(Genre).all()
     latest_titles = session.query(Manga).order_by(Manga.id.desc()).limit(3)
-    return render_template('main.html', genres=genres, latest_titles=latest_titles)
+    return render_template('main.html',
+                           genres=genres,
+                           latest_titles=latest_titles)
 
 
 @app.route('/catalog/genres/<int:genre_id>/items')
@@ -42,7 +44,10 @@ def genreListings(genre_id):
     genre = session.query(Genre).filter_by(id=genre_id).one()
     manga = session.query(Manga).filter_by(genre_id=genre_id)
 
-    return render_template('genre.html', manga=manga, genres=genres, genre_id=genre_id)
+    return render_template('genre.html',
+                           manga=manga,
+                           genres=genres,
+                           genre_id=genre_id)
 
 
 # TODO - route for creating a new category
@@ -56,12 +61,12 @@ def mangaCreate(genre_id):
     genre = session.query(Genre).filter_by(id=genre_id).one()
     if request.method == 'POST':
         newTitle = Manga(name=request.form['name'],
-                        description=request.form['description'],
-                        volumes=request.form['volumes'],
-                        chapters=request.form['chapters'],
-                        authors=request.form['authors'],
-                        genre_id=genre_id,
-                        user_id=login_session['user_id'])
+                         description=request.form['description'],
+                         volumes=request.form['volumes'],
+                         chapters=request.form['chapters'],
+                         authors=request.form['authors'],
+                         genre_id=genre_id,
+                         user_id=login_session['user_id'])
         session.add(newTitle)
         session.commit()
         return redirect(url_for('genreListings', genre_id=genre_id))
@@ -97,7 +102,7 @@ def mangaUpdate(manga_id):
             return redirect(url_for('mangaView', manga_id=mangaToUpdate.id))
         return render_template('mangaUpdate.html', manga=mangaToUpdate)
     else:
-        return render_template('mangaUpdate.html', manga=mangaToUpdate);
+        return render_template('mangaUpdate.html', manga=mangaToUpdate)
 
 
 @app.route('/catalog/titles/<int:manga_id>/delete', methods=['GET', 'POST'])
@@ -109,25 +114,29 @@ def mangaDelete(manga_id):
     genre_id = mangaToDelete.genre_id
 
     if mangaToDelete.user_id != login_session['user_id']:
-        return "<script>function alertUser() {alert('You are not authorized to delete this manga title. Please add your own title in order to delete.');}</script><body onload='alertUser()'>"
+        return """<script>function alertUser() {
+               alert('You are not authorized to delete this manga title.
+               Please add your own title in order to delete.');
+               }</script><body onload='alertUser()'>"""
 
     if request.method == 'POST':
         session.delete(mangaToDelete)
         session.commit()
         return redirect(url_for('genreListings', genre_id=genre_id))
     else:
-        return render_template('mangaDelete.html', manga=mangaToDelete);
+        return render_template('mangaDelete.html', manga=mangaToDelete)
 
 
 @app.route('/catalog/genres/json')
 def genresJSON():
     genres = session.query(Genre).all()
-    return jsonify(Genres = [g.serialize for g in genres])
+    return jsonify(Genres=[g.serialize for g in genres])
+
 
 @app.route('/catalog/genres/<int:genre_id>/json')
 def mangaJSON(genre_id):
     manga = session.query(Manga).filter_by(genre_id=genre_id).all()
-    return jsonify(Manga = [m.serialize for m in manga])
+    return jsonify(Manga=[m.serialize for m in manga])
 
 
 @app.route('/login')
@@ -136,9 +145,10 @@ def showLogin():
     login_session['state'] = state
     return render_template('login.html', STATE=state)
 
+
 @app.route('/gconnect', methods=['POST'])
 def gconnect():
-     # Validate state token
+    # Validate state token
     if request.args.get('state') != login_session['state']:
         response = make_response(json.dumps('Invalid state parameter.'), 401)
         response.headers['Content-Type'] = 'application/json'
@@ -216,13 +226,18 @@ def gconnect():
     output += '!</h1>'
     output += '<img src="'
     output += login_session['picture']
-    output += ' " style = "width: 300px; height: 300px;border-radius: 150px;-webkit-border-radius: 150px;-moz-border-radius: 150px;"> '
-    print login_session
+    output += ''' " style = "width: 300px;
+              height: 300px;
+              border-radius: 150px;
+              -webkit-border-radius: 150px;
+              -moz-border-radius: 150px;
+              "> '''
     return output
+
 
 @app.route('/gdisconnect')
 def gdisconnect():
-     # Only disconnect a connected user.
+    # Only disconnect a connected user.
     access_token = login_session.get('access_token')
     if access_token is None:
         response = make_response(json.dumps('Current user not connected.'), 401)
@@ -245,6 +260,7 @@ def gdisconnect():
         response.headers['Content-Type'] = 'application/json'
         return response
 
+
 @app.route('/fbconnect', methods=['POST'])
 def fbconnect():
     if request.args.get('state') != login_session['state']:
@@ -256,7 +272,7 @@ def fbconnect():
     # exchange client token for long-lived server-side token
     app_id = json.loads(open('fb_client_secrets.json', 'r').read())['web']['app_id']
     app_secret = json.loads(open('fb_client_secrets.json', 'r').read())['web']['app_secret']
-    url = 'https://graph.facebook.com/oauth/access_token?grant_type=fb_exchange_token&client_id=%s&client_secret=%s&fb_exchange_token=%s' % (app_id, app_secret, access_token)
+    url = '''https://graph.facebook.com/oauth/access_token?grant_type=fb_exchange_token&client_id=%s&client_secret=%s&fb_exchange_token=%s''' % (app_id, app_secret, access_token)
     h = httplib2.Http()
     result = h.request(url, 'GET')[1]
 
@@ -278,7 +294,7 @@ def fbconnect():
     login_session['access_token'] = token
 
     # Get user picture
-    url = 'https://graph.facebook.com/v2.8/me/picture?access_token=%s&redirect=0&height=200&width=200' % token
+    url = '''https://graph.facebook.com/v2.8/me/picture?access_token=%s&redirect=0&height=200&width=200''' % token
     h = httplib2.Http()
     result = h.request(url, 'GET')[1]
     data = json.loads(result)
@@ -297,16 +313,23 @@ def fbconnect():
     output += '!</h1>'
     output += '<img src="'
     output += login_session['picture']
-    output += ' " style = "width: 300px; height: 300px;border-radius: 150px;-webkit-border-radius: 150px;-moz-border-radius: 150px;"> '
+    output += ''' " style = "
+              width: 300px;
+              height: 300px;
+              border-radius: 150px;
+              -webkit-border-radius: 150px;
+              -moz-border-radius: 150px;
+              "> '''
 
     return output
+
 
 @app.route('/fbdisconnect')
 def fbdisconnect():
     facebook_id = login_session['facebook_id']
     # The access token must be included to successfully logout
     access_token = login_session['access_token']
-    url = 'https://graph.facebook.com/%s/permissions?access_token=%s' % (facebook_id,access_token)
+    url = 'https://graph.facebook.com/%s/permissions?access_token=%s' % (facebook_id, access_token)
     h = httplib2.Http()
     result = h.request(url, 'DELETE')[1]
     return "you have been logged out"
@@ -333,21 +356,23 @@ def disconnect():
 
 
 def createUser(login_session):
-    newUser = User(name = login_session['username'], email = login_session['email'], picture = login_session['picture'])
+    newUser = User(name=login_session['username'],
+                   email=login_session['email'],
+                   picture=login_session['picture'])
     session.add(newUser)
     session.commit()
-    user = session.query(User).filter_by(email = login_session['email']).one()
+    user = session.query(User).filter_by(email=login_session['email']).one()
     return user.id
 
 
 def getUserInfo(user_id):
-    user = session.query(User).filter_by(id = user_id).one()
+    user = session.query(User).filter_by(id=user_id).one()
     return user
 
 
 def getUserID(email):
     try:
-        user = session.query(User).filter_by(email = email).one()
+        user = session.query(User).filter_by(email=email).one()
         return user.id
     except:
         return None
@@ -355,4 +380,4 @@ def getUserID(email):
 if __name__ == '__main__':
     app.secret_key = secret_key
     app.debug = True
-    app.run(host = '0.0.0.0', port = 5000)
+    app.run(host='0.0.0.0', port=5000)
