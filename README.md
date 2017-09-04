@@ -3,9 +3,7 @@
 
 **SQLAlchemy** - ORM to support interaction between frontend and database. Install via pip using `pip install SQLAlchemy`
 
-**SQLite** - database
-
-[Additional information for installation can be found on the SQLite website](https://www.sqlite.org/download.html)
+**SQLite** - database. [Additional information for installation can be found on the SQLite website](https://www.sqlite.org/download.html)
 
 **virtualenv** - optional virtualization for easy workflow during development, allows for multiple installations of python. Install via pip using `sudo pip install virtualenv`
 
