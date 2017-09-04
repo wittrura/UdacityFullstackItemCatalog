@@ -1,5 +1,5 @@
 # Dependencies
-**Flask** - handles all frontend logic, routing, and rendering of template files
+Flask - handles all frontend logic, routing, and rendering of template files
 ```pip install Flask
 ```
 
