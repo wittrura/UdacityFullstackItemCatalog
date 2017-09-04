@@ -1,21 +1,22 @@
 from flask import Flask, render_template, url_for, request, redirect, jsonify
-app = Flask(__name__)
-
+# backend
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 from database_setup_manga import Base, Genre, Manga, User
-
 # authorization
 from flask import session as login_session
 from key import secret_key
-import random, string
+import random
+import string
 from oauth2client.client import flow_from_clientsecrets
 from oauth2client.client import FlowExchangeError
-
+# support, http requests, parsing
 import httplib2
 import json
 from flask import make_response
 import requests
+
+app = Flask(__name__)
 
 CLIENT_ID = json.loads(open('client_secrets.json', 'r').read())['web']['client_id']
 
@@ -26,21 +27,22 @@ Base.metadata.bind = engine
 DBSession = sessionmaker(bind=engine)
 session = DBSession()
 
+
 @app.route('/')
 def showAllGenres():
     genres = session.query(Genre).all()
     latest_titles = session.query(Manga).order_by(Manga.id.desc()).limit(3)
-    return render_template('main.html', genres = genres, latest_titles = latest_titles)
+    return render_template('main.html', genres=genres, latest_titles=latest_titles)
 
 
 @app.route('/catalog/genres/<int:genre_id>/items')
 def genreListings(genre_id):
     genres = session.query(Genre).all()
 
-    genre = session.query(Genre).filter_by(id = genre_id).one()
-    manga = session.query(Manga).filter_by(genre_id = genre_id)
+    genre = session.query(Genre).filter_by(id=genre_id).one()
+    manga = session.query(Manga).filter_by(genre_id=genre_id)
 
-    return render_template('genre.html', manga = manga, genres = genres, genre_id = genre_id)
+    return render_template('genre.html', manga=manga, genres=genres, genre_id=genre_id)
 
 
 # TODO - route for creating a new category
@@ -51,30 +53,30 @@ def mangaCreate(genre_id):
     if 'username' not in login_session:
         return redirect('/login')
 
-    genre = session.query(Genre).filter_by(id = genre_id).one()
+    genre = session.query(Genre).filter_by(id=genre_id).one()
     if request.method == 'POST':
-        newTitle = Manga(name = request.form['name'],
-                        description = request.form['description'],
-                        volumes = request.form['volumes'],
-                        chapters = request.form['chapters'],
-                        authors = request.form['authors'],
-                        genre_id = genre_id,
-                        user_id = login_session['user_id'])
+        newTitle = Manga(name=request.form['name'],
+                        description=request.form['description'],
+                        volumes=request.form['volumes'],
+                        chapters=request.form['chapters'],
+                        authors=request.form['authors'],
+                        genre_id=genre_id,
+                        user_id=login_session['user_id'])
         session.add(newTitle)
         session.commit()
-        return redirect(url_for('genreListings', genre_id = genre_id))
+        return redirect(url_for('genreListings', genre_id=genre_id))
     else:
-        return render_template('mangaCreate.html', genre = genre)
+        return render_template('mangaCreate.html', genre=genre)
 
 
 @app.route('/catalog/titles/<int:manga_id>')
 def mangaView(manga_id):
-    manga = session.query(Manga).filter_by(id = manga_id).one()
+    manga = session.query(Manga).filter_by(id=manga_id).one()
     creator = getUserInfo(manga.user_id)
     if 'username' not in login_session or creator.id != login_session['user_id']:
-        return render_template('mangaPublic.html', manga = manga)
+        return render_template('mangaPublic.html', manga=manga)
     else:
-        return render_template('manga.html', manga = manga)
+        return render_template('manga.html', manga=manga)
 
 
 @app.route('/catalog/titles/<int:manga_id>/edit', methods=['GET', 'POST'])
@@ -82,7 +84,7 @@ def mangaUpdate(manga_id):
     if 'username' not in login_session:
         return redirect('/login')
 
-    mangaToUpdate = session.query(Manga).filter_by(id = manga_id).one()
+    mangaToUpdate = session.query(Manga).filter_by(id=manga_id).one()
     if request.method == 'POST':
         if request.form['name']:
             mangaToUpdate.name = request.form['name']
@@ -92,10 +94,10 @@ def mangaUpdate(manga_id):
             mangaToUpdate.authors = request.form['authors']
             session.add(mangaToUpdate)
             session.commit()
-            return redirect(url_for('mangaView', manga_id = mangaToUpdate.id))
-        return render_template('mangaUpdate.html', manga = mangaToUpdate)
+            return redirect(url_for('mangaView', manga_id=mangaToUpdate.id))
+        return render_template('mangaUpdate.html', manga=mangaToUpdate)
     else:
-        return render_template('mangaUpdate.html', manga = mangaToUpdate);
+        return render_template('mangaUpdate.html', manga=mangaToUpdate);
 
 
 @app.route('/catalog/titles/<int:manga_id>/delete', methods=['GET', 'POST'])
@@ -103,7 +105,7 @@ def mangaDelete(manga_id):
     if 'username' not in login_session:
         return redirect('/login')
 
-    mangaToDelete = session.query(Manga).filter_by(id = manga_id).one()
+    mangaToDelete = session.query(Manga).filter_by(id=manga_id).one()
     genre_id = mangaToDelete.genre_id
 
     if mangaToDelete.user_id != login_session['user_id']:
@@ -112,9 +114,9 @@ def mangaDelete(manga_id):
     if request.method == 'POST':
         session.delete(mangaToDelete)
         session.commit()
-        return redirect(url_for('genreListings', genre_id = genre_id))
+        return redirect(url_for('genreListings', genre_id=genre_id))
     else:
-        return render_template('mangaDelete.html', manga = mangaToDelete);
+        return render_template('mangaDelete.html', manga=mangaToDelete);
 
 
 @app.route('/catalog/genres/json')
@@ -124,7 +126,7 @@ def genresJSON():
 
 @app.route('/catalog/genres/<int:genre_id>/json')
 def mangaJSON(genre_id):
-    manga = session.query(Manga).filter_by(genre_id = genre_id).all()
+    manga = session.query(Manga).filter_by(genre_id=genre_id).all()
     return jsonify(Manga = [m.serialize for m in manga])
 
 
@@ -215,6 +217,7 @@ def gconnect():
     output += '<img src="'
     output += login_session['picture']
     output += ' " style = "width: 300px; height: 300px;border-radius: 150px;-webkit-border-radius: 150px;-moz-border-radius: 150px;"> '
+    print login_session
     return output
 
 @app.route('/gdisconnect')
@@ -231,9 +234,9 @@ def gdisconnect():
     if result['status'] == '200':
         del login_session['access_token']
         del login_session['gplus_id']
-        del login_session['username']
-        del login_session['email']
-        del login_session['picture']
+        # del login_session['username']
+        # del login_session['email']
+        # del login_session['picture']
         response = make_response(json.dumps('Successfully disconnected.'), 200)
         response.headers['Content-Type'] = 'application/json'
         return response
