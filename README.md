@@ -1,17 +1,17 @@
 # Dependencies
-Flask - handles all frontend logic, routing, and rendering of template files
+**Flask** - handles all frontend logic, routing, and rendering of template files
 ```pip install Flask
 ```
 
-SQLAlchemy - ORM to support interaction between frontend and database
+**SQLAlchemy** - ORM to support interaction between frontend and database
 ```pip install SQLAlchemy
 ```
 
-SQLite - database
+**SQLite** - database
 
 [Additional information can be found on the SQLite website](https://www.sqlite.org/download.html)
 
-virtualenv - optional virtualization for easy workflow during development, allows for multiple installations of python
+**virtualenv** - optional virtualization for easy workflow during development, allows for multiple installations of python
 ```sudo pip install virtualenv
 ```
 
