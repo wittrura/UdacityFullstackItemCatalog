@@ -87,6 +87,12 @@ def mangaUpdate(manga_id):
         return redirect('/login')
 
     mangaToUpdate = session.query(Manga).filter_by(id=manga_id).one()
+    
+    if mangaToUpdate.user_id != login_session['user_id']:
+        return "<script>function myFunction() {alert('You are not authorized" +\
+        " to edit this restaurant. Please create your own restaurant in " +\
+        "order to edit.');}</script><body onload='myFunction()''>"
+
     if request.method == 'POST':
         if request.form['name']:
             mangaToUpdate.name = request.form['name']
@@ -111,10 +117,9 @@ def mangaDelete(manga_id):
     genre_id = mangaToDelete.genre_id
 
     if mangaToDelete.user_id != login_session['user_id']:
-        return """<script>function alertUser() {
-               alert('You are not authorized to delete this manga title.
-               Please add your own title in order to delete.');
-               }</script><body onload='alertUser()'>"""
+        return "<script>function myFunction() {alert('You are not authorized" +\
+        " to delete this restaurant. Please create your own restaurant in " +\
+        "order to delete.');}</script><body onload='myFunction()''>"
 
     if request.method == 'POST':
         session.delete(mangaToDelete)
@@ -246,9 +251,6 @@ def gdisconnect():
     if result['status'] == '200':
         del login_session['access_token']
         del login_session['gplus_id']
-        # del login_session['username']
-        # del login_session['email']
-        # del login_session['picture']
         response = make_response(json.dumps('Successfully disconnected.'), 200)
         response.headers['Content-Type'] = 'application/json'
         return response
@@ -338,7 +340,6 @@ def disconnect():
     if 'provider' in login_session:
         if login_session['provider'] == 'google':
             gdisconnect()
-            # del login_session['credentials']
         if login_session['provider'] == 'facebook':
             fbdisconnect()
             del login_session['facebook_id']
