@@ -50,9 +50,6 @@ def genreListings(genre_id):
                            genre_id=genre_id)
 
 
-# TODO - route for creating a new category
-
-
 @app.route('/catalog/genres/<int:genre_id>/new', methods=['GET', 'POST'])
 def mangaCreate(genre_id):
     if 'username' not in login_session:
