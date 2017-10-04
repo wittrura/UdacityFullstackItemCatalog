@@ -2,7 +2,7 @@ from flask import Flask, render_template, url_for, request, redirect, jsonify
 # backend
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
-from database_setup_manga import Base, Genre, Manga, User
+from database_setup_postgres import Base, Genre, Manga, User
 # authorization
 from flask import session as login_session
 from key import secret_key
@@ -380,4 +380,4 @@ def getUserID(email):
 if __name__ == '__main__':
     app.secret_key = secret_key
     app.debug = True
-    app.run(host='0.0.0.0', port=5000)
+    app.run(host='0.0.0.0', port=8080)
