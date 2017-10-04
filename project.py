@@ -20,8 +20,10 @@ app = Flask(__name__)
 
 CLIENT_ID = json.loads(open('client_secrets.json', 'r').read())['web']['client_id']
 
-
-engine = create_engine('sqlite:///manga.db')
+# engine for sqlite
+# engine = create_engine('sqlite:///manga.db')
+# engine for postgresql
+engine = create_engine('postgresql://catalog:udacity@localhost:5432/catalog')
 Base.metadata.bind = engine
 
 DBSession = sessionmaker(bind=engine)
@@ -87,7 +89,7 @@ def mangaUpdate(manga_id):
         return redirect('/login')
 
     mangaToUpdate = session.query(Manga).filter_by(id=manga_id).one()
-    
+
     if mangaToUpdate.user_id != login_session['user_id']:
         return "<script>function myFunction() {alert('You are not authorized" +\
         " to edit this restaurant. Please create your own restaurant in " +\
