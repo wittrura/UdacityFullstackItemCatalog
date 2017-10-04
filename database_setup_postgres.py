@@ -12,7 +12,7 @@ class User(Base):
 
     name = Column(String(50), nullable = False)
     email = Column(String(50), nullable = False)
-    picture = Column(String(80))
+    picture = Column(String(250))
     id = Column(Integer, primary_key = True)
 
 
@@ -62,6 +62,6 @@ class Manga(Base):
 
 
 
-engine = create_engine('postgresql://postgres@localhost:5432/catalog')
+engine = create_engine('postgresql://catalog:udacity@localhost:5432/catalog')
 
 Base.metadata.create_all(engine)

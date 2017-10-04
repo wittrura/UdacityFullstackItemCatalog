@@ -1,9 +1,9 @@
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 
-from database_setup_manga import Base, Genre, Manga, User
+from database_setup_postgres import Base, Genre, Manga, User
 
-engine = create_engine('postgresql://postgres@localhost:5432/catalog')
+engine = create_engine('postgresql://catalog:udacity@localhost:5432/catalog')
 # Bind the engine to the metadata of the Base class so that the
 # declaratives can be accessed through a DBSession instance
 Base.metadata.bind = engine
