@@ -2,7 +2,12 @@ from flask import Flask, render_template, url_for, request, redirect, jsonify
 # backend
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
+
+# database setup for sqlite
+# from database_setup_manga import Base, Genre, Manga, User
+# database setup for postgres
 from database_setup_postgres import Base, Genre, Manga, User
+
 # authorization
 from flask import session as login_session
 from key import secret_key
@@ -22,7 +27,7 @@ CLIENT_ID = json.loads(open('client_secrets.json', 'r').read())['web']['client_i
 
 # engine for sqlite
 # engine = create_engine('sqlite:///manga.db')
-# engine for postgresql
+# engine for postgresq
 engine = create_engine('postgresql://catalog:udacity@localhost:5432/catalog')
 Base.metadata.bind = engine
 
@@ -380,4 +385,5 @@ def getUserID(email):
 if __name__ == '__main__':
     app.secret_key = secret_key
     app.debug = True
-    app.run(host='0.0.0.0', port=8080)
+    # app.run(host='0.0.0.0', port=8080)
+    app.run(host='52.1.134.59', port=80)
